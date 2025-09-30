@@ -1,0 +1,23 @@
+# Import des données en fonction du format du fichier
+
+Pour mon usage, j'utilise principalement les fichiers CSV, tsv, Excel, JSON. 
+Dans chaque exemple, remplacez "chemin/vers/fichier" par le chemin réel de votre fichier. 
+La plupart de ces fonctions nécessitent l'installation de packages supplémentaires.
+
+```{r }
+## Fichier CSV (avec séparateur point-virgule)
+library(readr)
+data_csv <- read.csv("chemin/vers/fichier.csv", sep = ";")
+
+## Fichier Excel
+library(readxl)
+data_excel <- read_excel("chemin/vers/fichier.xlsx")
+
+## Fichier texte (avec séparateur tabulation)
+# dans le cas du format "tab delimited" du WOS
+data_txt <- read.table("chemin/vers/fichier.txt", header = TRUE, sep = "\t")
+
+## Fichier JSON
+library(jsonlite)
+data_json <- fromJSON("chemin/vers/fichier.json")
+```
