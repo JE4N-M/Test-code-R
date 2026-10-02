@@ -1,0 +1,44 @@
+Par défaut, j'utilise ces librairies : 
+
+```{r, message=FALSE, warning=FALSE}
+library(jsonlite)
+library(readr)
+library(readxl)
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(stringr)
+```
+
+Fonction pour ouvrir les labos au chemin des fichiers
+```{r}
+importer_fichiers <- function(tableFichier) {
+  for (i in seq_len(nrow(tableFichier))) {
+    nom <- tableFichier$listeFichiers[i]
+    chemin <- tableFichier$chemins[i]
+    
+    if (!file.exists(chemin)) {
+      warning("Fichier introuvable pour : ", nom, " -> ", chemin)
+      next
+    }
+    
+    data_temp <- stream_in(file(chemin)) %>%
+      mutate(Req = nom)
+    
+    assign(nom, data_temp, envir = .GlobalEnv)
+    message("Importé : ", nom)
+  }
+}
+```
+
+Je créé ensuite un tableau regroupant les noms des fichiers et des chemins d'accès dans mes fichiers pour les ouvrir simplement en une seule opération
+
+```{r}
+tableFichier <- data.frame(listeFichier,chemin)
+# avec chemin <- paste0("C:/Users/.../Missions/Etudes",listeFichier,".jsonl")
+```
+
+Utilisation de la fonction
+```{r}
+importer_fichiers(tableFichier)
+```
