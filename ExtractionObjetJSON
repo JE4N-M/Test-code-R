@@ -1,0 +1,25 @@
+Fonction pour extraire un objet JSON
+```{r}
+extraire_variantes_affiliations <- function(data) {
+  data %>%
+    select(authorships) %>%
+    mutate(authorships = map(authorships, function(a) {
+      raw <- if (length(a$raw_affiliation_strings) == 0) NA_character_
+             else unlist(a$raw_affiliation_strings, use.names = FALSE)
+      inst <- map_chr(a$institutions, function(i) {
+        d <- i$display_name
+        if (length(d) == 0) NA_character_
+        else if (length(d) == 1) d
+        else paste(unique(d), collapse = " ; ")
+      })
+
+      tibble(
+        raw_affiliation_strings   = raw,
+        institutions_display_name = if (length(inst) == length(raw)) inst
+                                     else rep(NA_character_, length(raw))
+      )
+    })) %>%
+    unnest(authorships) %>%
+    distinct()
+}
+```
