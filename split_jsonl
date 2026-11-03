@@ -1,0 +1,15 @@
+Il y a une limitation du poids du fichier d'import de 5Mo dans LODEX, or ici le mien faisait 8Mo.
+Afin d'être certain qu'en découpant mon fichier, l'une des moitié ne dépassait pas ce seuil, je l'ai découpé en 3.
+Dans R, je peux réaliser cette opération sans avoir à importer toutes les lignes du fichier :
+=> Puisqu'un fichier JSONL est déjà un JSON par ligne, inutile de le parser puis le re-sérialiser (risque de perte et très lent). 
+
+```{r}
+chemin <- "C:/Users/mourot/Documents/Missions/Occitanie_Marbec_Fouilland/OpenAlex/CORPUS.jsonl"
+
+lines <- readLines(chemin)
+
+writeLines(lines[1:11000],       "C:/Users/mourot/Documents/Missions/Occitanie_Marbec_Fouilland/OpenAlex/Corpus_split1.jsonl")
+writeLines(lines[11001:21000],   "C:/Users/mourot/Documents/Missions/Occitanie_Marbec_Fouilland/OpenAlex/Corpus_split2.jsonl")
+writeLines(lines[21001:length(lines)], "C:/Users/mourot/Documents/Missions/Occitanie_Marbec_Fouilland/OpenAlex/Corpus_split3.jsonl")
+
+```
