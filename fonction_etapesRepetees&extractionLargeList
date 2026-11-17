@@ -1,0 +1,34 @@
+Ici, il s'agit d'une fonction qui permet d'extraire des lignes d'un tableau en utilisant filter() avec la détection de structure
+la structure de ce tableau se comporte de la présence d'institut de la base OpenAlex, WoS, OpenAlex_uniquement ou WoS_uniquement
+Pour extraire l'intégralité d'un institut, je dois exploiter ces 4 possibilités pour les fusionner.
+
+```{r message=FALSE}
+extraire_institut <- function(data, institut) {
+  
+  # OpenAlex
+  oa <- data |> filter(str_detect(instituts_OpenAlex, institut))
+  oa_uniq <- data |> filter(str_detect(instituts_OpenAlex_uniquement, institut))
+  res_oa <- oa |> full_join(oa_uniq) |> unique()
+  
+  # WoS
+  wos <- data |> filter(str_detect(instituts_WoS, institut))
+  wos_uniq <- data |> filter(str_detect(instituts_WoS_uniquement, institut))
+  res_wos <- wos |> full_join(wos_uniq) |> unique()
+  
+  # Concaténation
+  res_oa |> full_join(res_wos) |> unique()
+}
+
+liste_institut <- c("INC","INSIS","INSB","INSU","INP","INS2I","INSMI","INEE","INSHS","IN2P3","DGDS","PDT","DGDP")
+
+# Appliquer à tous les instituts
+liste_comparaisons <- setNames(
+  lapply(liste_institut, \(inst) extraire_institut(comparaison_DOI_CNRS, inst)),
+  liste_institut
+)
+```
+
+# Pour extraire l'institut de la liste 
+```{r message=FALSE}
+list2env(liste_comparaisons, envir = .GlobalEnv)
+```
