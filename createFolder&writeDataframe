@@ -1,0 +1,21 @@
+# Pour créer un dataframe sur R
+Ici, je l'ai bien localisé à l'endroit où je veux le retrouver
+```{r}
+dir.create("C:/Users/mourot/Documents/Missions/Etude CNRS OpenAlex/Recouvrement_WoS_OpenAlex/split_Institut", showWarnings = FALSE)
+```
+
+# Pour faire en sorte d'extraire les éléments d'une large liste, il y a la fonction 'list2env'
+```{r}
+list2env(liste_comparaisons, envir = .GlobalEnv)
+```
+
+# Pour extraire les élements de la liste "liste_comparaisons" et exporter les .csv
+```{r}
+for (inst in names(liste_comparaisons)) {
+  write.csv(
+    liste_comparaisons[[inst]],
+    file.path("C:/Users/mourot/Documents/Missions/Etude CNRS OpenAlex/Recouvrement_WoS_OpenAlex/split_Institut", paste0("comparaison_", inst, ".csv")),
+    row.names = FALSE
+  )
+}
+```
